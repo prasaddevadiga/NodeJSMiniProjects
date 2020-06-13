@@ -1,8 +1,5 @@
 
-const validator = require('validator')
-
 const yargs = require('yargs')
-const util = require('./utils')
 const notes = require('./Notes')
 
 
