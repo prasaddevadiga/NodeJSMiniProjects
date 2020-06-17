@@ -2,7 +2,6 @@
 const weatherRequest = require('./Weather')
 const yargs = require('yargs')
 
-
 yargs.command({
     command: "fetch",
     describe: "provide address to fetch weather",
