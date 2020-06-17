@@ -1,19 +1,31 @@
 
 const request = require('request')
 
-const fetchWeather = (address) => {
+const geoCode = (address, callBack) => {
     const geoURL = encodeURI("https://api.mapbox.com/geocoding/v5/mapbox.places/"+ address + ".json?access_token=pk.eyJ1IjoicHJhc2FkZGV2YWRpZ2EiLCJhIjoiY2tiNmN1OTU0MHU0bzJxcGRuZG91eXh3aiJ9.sDzpeZVBPh4F63RGggsLUA&limit=1")
     request({uri: geoURL, json: true}, (error, response) => {
         if (error) {
-            console.log("Unable to connecto to Weatherstak server")
+            callBack(null, "Unable to connecto to Weatherstak server")
         }
         else if (response.body.features.length === 0) {
-            console.log("no localtion found")
+            callBack(null, "no localtion found")
         } else {
-            const longitude = response.body.features[0].center[0]
-            const lattitude = response.body.features[0].center[1] 
-            const weatherUrl = "http://api.weatherstack.com/current?access_key=37a5fafce95f16f2aff2811f6a911b19&query=" + lattitude +","+longitude
-    
+            callBack({
+                longitude: response.body.features[0].center[0], 
+                lattitude: response.body.features[0].center[1]
+            }, null)
+        }
+    })
+}
+
+const fetchWeather = (address) => {
+    console.log(address)
+    geoCode(address, (data, errorMessage) => {
+        if (errorMessage) {
+            console.log(errorMessage) 
+        } else {
+            const weatherUrl = "http://api.weatherstack.com/current?access_key=37a5fafce95f16f2aff2811f6a911b19&query=" + data.lattitude +","+ data.longitude
+            console.log("weatherUrl - >", weatherUrl)
             request({url: weatherUrl, json: true}, (error, resonse) => {
                 if (error) {
                     console.log("Unable to connecto to Weatherstak server")
@@ -24,6 +36,7 @@ const fetchWeather = (address) => {
                 }
             })
         }
+
     })
 }
 
