@@ -3,11 +3,11 @@ const forecast = require('./utils/forecast')
 
 const fetchWeather = (address) => {
     console.log(address)
-    geoCode(address, (data, errorMessage) => {
+    geoCode(address, ({longitude, lattitude, location} = {}, errorMessage) => {
         if (errorMessage)
             return console.log(errorMessage)
-        console.log("Fetching weather for ", data.location)
-        forecast(data.longitude, data.lattitude, (forecastData, error) => {
+        console.log("Fetching weather for ", location)
+        forecast(longitude, lattitude, (forecastData, error) => {
             if (error) {
                 console.log(error)
             } else {
